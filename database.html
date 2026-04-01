@@ -29,17 +29,74 @@
     const team = urlParams.get('team');
     const ship = urlParams.get('ship');
 
-    const shipIntel = {
-        "arwing_mk1": {
+    const shipIntel = 
+    {
+        "arwing_mk1": 
+        {
             name: "Arwing MK I",
-            desc: "The legendary centerpiece of the Star Fox fleet.",
-            stats: "Speed: Mach 4.0 | Shields: Standard"
+            
         },
-        "wolfen": {
-            name: "Wolfen",
-            desc: "High-performance mercenary interceptor.",
-            stats: "Speed: Mach 4.5 | Shields: Reinforced"
-        }
+
+        "arwing_mk2": 
+        {
+            name: "Arwing MK II",
+            
+        },
+
+        "arwing_mk2b": 
+        {
+            name: "Arwing MK II Retrofit",
+            
+        },
+
+        "arwing_mk3": 
+        {
+            name: "Arwing MK III",
+            
+        },
+
+        "arwing_phoenix": 
+        {
+            name: "Arwing Phoenix",
+            
+        },
+
+        "landmaster": 
+        {
+            name: "Landmaster",
+            
+        },
+
+        "bluemarine": 
+        {
+            name: "Bluemarine",
+            
+        },
+
+        "miyu_arwing": 
+        {
+            name: "Miyu's Arwing",
+            
+        },
+
+        "fay_arwing": 
+        {
+            name: "Fay's Arwing",
+            
+        },
+
+        "skyclaw": 
+        {
+            name: "Arwing Skyclaw",
+            
+        },
+
+        "cloudrunner": 
+        {
+            name: "Arwing Cloudrunner",
+            
+        },
+        
     };
 
     if (team && ship && shipIntel[ship]) {
