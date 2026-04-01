@@ -43,7 +43,7 @@
             
         },
 
-        "arwing_mk2b": 
+        "arwing_mk2_b": 
         {
             name: "Arwing MK II Retrofit",
             
@@ -99,7 +99,8 @@
         
     };
 
-    if (team && ship && shipIntel[ship]) {
+    if (team && ship && shipIntel[ship]) 
+    {
         // This combines them: "starfox/arwing_mk1.glb"
         document.getElementById('viewer').src = `${team}/${ship}.glb`;
         
