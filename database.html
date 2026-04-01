@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Technical Specifications</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <style>
+        body { background: #0b0c0d; color: white; font-family: sans-serif; margin: 0; display: flex; height: 100vh; }
+        model-viewer { flex: 3; background: #111; }
+        .lore-panel { flex: 1; background: #1a1c1e; padding: 30px; border-left: 2px solid #333; overflow-y: auto; }
+        .back { color: #3498db; text-decoration: none; display: block; margin-bottom: 20px; font-weight: bold; }
+        h1 { color: #3498db; border-bottom: 2px solid #3498db; }
+        .stats { background: #25282c; padding: 15px; margin-top: 20px; font-family: monospace; font-size: 0.9rem; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<model-viewer id="viewer" src="" auto-rotate camera-controls shadow-intensity="1"></model-viewer>
+
+<div class="lore-panel">
+    <a href="index.html" class="back">← EXIT DATABASE</a>
+    <h1 id="title">Loading...</h1>
+    <p id="desc"></p>
+    <div class="stats" id="stats"></div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const team = urlParams.get('team');
+    const ship = urlParams.get('ship');
+
+    const shipIntel = {
+        "arwing_mk1": {
+            name: "Arwing MK I",
+            desc: "The legendary centerpiece of the Star Fox fleet.",
+            stats: "Speed: Mach 4.0 | Shields: Standard"
+        },
+        "wolfen": {
+            name: "Wolfen",
+            desc: "High-performance mercenary interceptor.",
+            stats: "Speed: Mach 4.5 | Shields: Reinforced"
+        }
+    };
+
+    if (team && ship && shipIntel[ship]) {
+        // This combines them: "starfox/arwing_mk1.glb"
+        document.getElementById('viewer').src = `${team}/${ship}.glb`;
+        
+        document.getElementById('title').innerText = shipIntel[ship].name;
+        document.getElementById('desc').innerText = shipIntel[ship].desc;
+        document.getElementById('stats').innerText = shipIntel[ship].stats;
+    }
+</script>
+
+</body>
+</html>
