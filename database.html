@@ -17,19 +17,11 @@
 
 <model-viewer id="viewer" src="" auto-rotate camera-controls shadow-intensity="1" style="width: 100%; height: 100%;"></model-viewer>
 
- <div class="lore-panel">
+<div class="lore-panel">
     <a href="index.html" class="back">← EXIT DATABASE</a>
-    <h1 id="title">Select a Ship</h1>
-    <p id="desc">Accessing Cornerian Fleet Records...</p>
-    
-    <div class="appearances-box">
-        <span class="label">RECORDED APPEARANCES</span>
-        <p id="appearances">N/A</p>
-    </div>
-</div>
-
-<div id="container3d">
-    <model-viewer id="ship-viewer" src="" auto-rotate camera-controls></model-viewer>
+    <h1 id="title">Loading...</h1>
+    <p id="desc"></p>
+    <div class="appearances" id="appearances"></div>
 </div>
 
 <script>
@@ -279,41 +271,14 @@
         }, 
     };
 
-   function showDetails(shipKey) 
-   {
-    const ship = shipIntel[shipKey];
-    
-    if (ship) 
-    {
-        // 1. Update the Text
-        document.getElementById('title').innerText = ship.name;
-        document.getElementById('desc').innerText = ship.desc;
-        document.getElementById('appearances').innerText = ship.appearances;
-
-        // 2. Update the Model
-        // Change 'ship-viewer' to the ID of your 3D container or model-viewer tag
-        const viewer = document.getElementById('ship-viewer');
+  if (team && ship && shipIntel[ship]) {
+        // This combines them: "starfox/arwing_mk1.glb"
+        document.getElementById('viewer').src = `${team}/${ship}.glb`;
         
-        if (viewer) 
-        {
-            // If you're using <model-viewer>
-            viewer.src = ship.modelPath;
-            
-            // If you're using a custom Three.js function like 'loadModel'
-            // loadModel(ship.modelPath);
-        }
+        document.getElementById('title').innerText = shipIntel[ship].name;
+        document.getElementById('desc').innerText = shipIntel[ship].desc;
+        document.getElementById('stats').innerText = shipIntel[ship].stats;
     }
-}
-
-    window.onload = function() 
-    {
-    const urlParams = new URLSearchParams(window.location.search);
-    const shipKey = urlParams.get('ship');
-    if (shipKey) 
-    {
-        showDetails(shipKey);
-    }
-};
 </script>
 
 </body>
