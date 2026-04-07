@@ -5,23 +5,25 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
         body { background: #0b0c0d; color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        .container { display: flex; flex: 1; width: 100%; }
+        .container { display: flex; flex: 1; width: 100%; height: 100%; }
         model-viewer { flex: 3; background: #111; width: 100%; height: 100%; }
         .lore-panel { flex: 1; background: #1a1c1e; padding: 30px; border-left: 2px solid #333; overflow-y: auto; }
         .back { color: #3498db; text-decoration: none; display: block; margin-bottom: 20px; font-weight: bold; }
-        h1 { color: #3498db; border-bottom: 2px solid #3498db; }
-        .stats { background: #25282c; padding: 15px; margin-top: 20px; font-family: monospace; font-size: 0.9rem; border-radius: 5px; }
+        h1 { color: #3498db; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        #appearances { font-style: italic; color: #2ecc71; margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<model-viewer id="viewer" src="" auto-rotate camera-controls shadow-intensity="1" style="width: 100%; height: 100%;"></model-viewer>
+<div class="container">
+    <model-viewer id="viewer" src="" auto-rotate camera-controls shadow-intensity="1"></model-viewer>
 
-<div class="lore-panel">
-    <a href="index.html" class="back">← EXIT DATABASE</a>
-    <h1 id="title">Loading...</h1>
-    <p id="desc"></p>
-    <div class="appearances" id="appearances"></div>
+    <div class="lore-panel">
+        <a href="index.html" class="back">← EXIT DATABASE</a>
+        <h1 id="title">Loading...</h1>
+        <p id="desc"></p>
+        <div id="appearances"></div>
+    </div>
 </div>
 
 <script>
@@ -29,255 +31,190 @@
     const team = urlParams.get('team');
     const ship = urlParams.get('ship');
 
-    const shipIntel = 
-    {
-        "arwing_mk1": 
-        {
+    const shipIntel = {
+        "arwing_mk1": {
             name: "Arwing MK I",
             desc: "The original Arspace Dynamics interceptor. Fast and agile, but lacks heavy armor. A favorite among mercenaries for its reliable G-Diffuser system.",
             appearances: "Appearance: StarFox (1993), StarFox Zero",
         },
-
-        "arwing_mk2": 
-        {
+        "arwing_mk2": {
             name: "Arwing MK II",
-            desc: "A high-performance successor to the MK I. Cancelled by the Cornerian Army due to high costs, it is now a rare sight, used only by those with the credits to maintain its advanced systems.",
+            desc: "A high-performance successor to the MK I. Cancelled by the Cornerian Army due to high costs, it is now a rare sight.",
             appearances: "Appearance: StarFox 64, 64 3D, Zero",
         },
-
-        "arwing_mk2_b": 
-        {
+        "arwing_mk2_b": {
             name: "Arwing MK II Retrofit",
-            desc: "A custom X-02b variant engineered by Slippy Toad. Despite superior internal modifications, the craft suffers from hardware degradation due to poor upkeep. High potential, but unpredictable performance.",
+            desc: "A custom X-02b variant engineered by Slippy Toad. Despite superior modifications, the craft suffers from hardware degradation.",
             appearances: "Appearance: StarFox Adventures",
         },
-
-        "arwing_mk3": 
-        {
+        "arwing_mk3": {
             name: "Arwing MK III",
-            desc: "The pinnacle of Arspace Dynamics engineering. Built using data from the Phoenix project, it balances extreme durability with record-breaking speeds. Truly the ultimate evolution of the Star Fox fleet.",
+            desc: "The pinnacle of Arspace Dynamics engineering. Built using data from the Phoenix project.",
             appearances: "Appearance: StarFox Assault",
         },
-
-        "arwing_phoenix": 
-        {
+        "arwing_phoenix": {
             name: "Arwing Phoenix",
-            desc: "An experimental stunt-class Arwing variant. Known for its unique gliding capabilities and a specialized weapon system that fires concentrated plasma streams generated from engine heat.",
+            desc: "An experimental stunt-class Arwing variant. Known for its unique gliding capabilities.",
             appearances: "Appearance: StarFox Event Horizon",
         },
-
-        "landmaster": 
-        {
+        "landmaster": {
             name: "Landmaster",
-            desc: "A heavy-armored ground combat vehicle. Revived from a failed Arspace Dynamics project and upgraded by Slippy Toad, it features high-caliber firepower and a G-Diffuser for surprising agility on the battlefield.",
+            desc: "A heavy-armored ground combat vehicle. Features high-caliber firepower and a G-Diffuser for surprising agility.",
             appearances: "Appearance: StarFox 64, 64 3D, Zero",
         },
-
-        "bluemarine": 
-        {
+        "bluemarine": {
             name: "Bluemarine",
-            desc: "A heavy assault submarine engineered for deep-sea combat. While lacking in speed, its reinforced hull and specialized Aquan weaponry make it the ultimate platform for oceanic operations.",
+            desc: "A heavy assault submarine engineered for deep-sea combat. Reinforced hull and specialized Aquan weaponry.",
             appearances: "Appearance: StarFox 64, 64 3D",
         },
-
-        "miyu_arwing": 
-        {
+        "miyu_arwing": {
             name: "Miyu's Arwing",
-            desc: "A lightweight post-war model optimized for speed. While it boasts superior maneuverability, its defensive capabilities are significantly reduced to maintain its high-thrust-to-weight ratio.",
+            desc: "A lightweight post-war model optimized for speed. Boasts superior maneuverability.",
             appearances: "Appearance: StarFox 2",
         },
-
-        "fay_arwing": 
-        {
+        "fay_arwing": {
             name: "Fay's Arwing",
-            desc: "A rare, high-acceleration Interceptor variant. Optimized for extreme agility and rapid-response combat, this veteran craft trades armor plating for unparalleled maneuverability in dense debris fields.",
+            desc: "A rare, high-acceleration Interceptor variant. trades armor plating for unparalleled maneuverability.",
             appearances: "Appearance: StarFox 2",
         },
-
-        "skyclaw": 
-        {
+        "skyclaw": {
             name: "Arwing Skyclaw",
-            desc: "Falco's specialized MK III. By removing standard armor, this craft achieves the highest thrust-to-weight ratio in the Star Fox fleet, allowing for unmatched aerial superiority in the hands of an ace.",
+            desc: "Falco's specialized MK III. Achieving the highest thrust-to-weight ratio in the Star Fox fleet.",
             appearances: "Appearance: StarFox Event Horizon",
         },
-
-        "cloudrunner": 
-        {
+        "cloudrunner": {
             name: "Arwing Cloudrunner",
-            desc: "Krystal's personalized MK III. This unit sacrifices the Arwing's signature maneuverability for superior defensive plating and devastating firepower, making it ideal for frontal assaults.",
+            desc: "Krystal's personalized MK III. This unit sacrifices maneuverability for superior defensive plating.",
             appearances: "Appearance: StarFox Event Horizon",
         },
-
-        "gf_64": 
-        {
+        "gf_64": {
             name: "Great Fox 64",
-            desc: "A Dreadnought-class Heavy Cruiser and the base of operations for Star Fox. Equipped with hyper-laser cannons and a built-in ROB-64 interface, it is as much a weapon as it is a home.",
+            desc: "A Dreadnought-class Heavy Cruiser and the base of operations for Star Fox.",
             appearances: "Appearance: StarFox 64, 64 3D, Zero",
         },
-
-        "gf_adv": 
-        {
+        "gf_adv": {
             name: "Great Fox Adventures",
-            desc: "The veteran version of the Star Fox mothership. Though heavily weathered from years of deep-space mercenary work, it remains a formidable dreadnought-class heavy cruiser.",
+            desc: "The veteran version of the Star Fox mothership. Formidable dreadnought-class heavy cruiser.",
             appearances: "Appearance: StarFox Adventures",
         },
-
-        "gf_assault": 
-        {
+        "gf_assault": {
             name: "Great Fox Assault",
-            desc: "A modernized refit of the Star Fox dreadnought. Sleeker, faster, and more durable, this version was optimized for the high-intensity combat of the Aparoid War.",
+            desc: "A modernized refit of the Star Fox dreadnought. Optimized for high-intensity combat.",
             appearances: "Appearance: StarFox Assault",
         },
-
-        "gf_command":
-        {
+        "gf_command": {
             name: "Great Fox Command",
-
+            desc: "The strategic mobile base used during the Anglar invasion.",
             appearances: "Appearance: StarFox Command",
-
         },
-
-        "wolfen": 
-        {
-        name: "Wolfen",
-        desc: "A heavy-hitting interceptor designed by Ruffian Corp. Originally a Venom Navy staple, it became the signature craft of Star Wolf. It balances high offensive power with surprising agility.",
-        appearances: "Appearance: StarFox 64, 64 3D, Zero",
+        "wolfen": {
+            name: "Wolfen",
+            desc: "A heavy-hitting interceptor designed by Ruffian Corp. The signature craft of Star Wolf.",
+            appearances: "Appearance: StarFox 64, 64 3D, Zero",
         },
-
-         "redfang": 
-        {
-        name: "Redfang",
-        desc: "A rare Gen-III prototype built by Ruffian Corp. It represents the absolute peak of Venomian-derived technology, designed specifically to match the Arwing MK III in raw power and combat performance.",
-        appearances: "Appearance: StarFox Assault, Command",
+        "redfang": {
+            name: "Redfang",
+            desc: "A rare Gen-III prototype built by Ruffian Corp. Represents the peak of Venomian technology.",
+            appearances: "Appearance: StarFox Assault, Command",
         },
-
-         "rainbow": 
-        {
-        name: "Rainbow Delta",
-        desc: "Leon Powalski's custom-tuned Wolfen. This variant focuses entirely on maximizing thrust and acceleration, allowing Leon to outrun almost any threat in the Lylat System.",
-        appearances: "Appearance: StarFox Command",
+        "rainbow": {
+            name: "Rainbow Delta",
+            desc: "Leon Powalski's custom-tuned Wolfen. Focuses entirely on maximizing thrust.",
+            appearances: "Appearance: StarFox Command",
         },
-
-         "blackrose": 
-        {
-        name: "Blackrose",
-        desc: "Panther Caruso's signature heavy interceptor. It trades the typical Wolfen agility for maximum armor and localized fire superiority, making it a dangerous threat in close-quarters dogfights.",
-        appearances: "Appearance: StarFox Command",
+        "blackrose": {
+            name: "Blackrose",
+            desc: "Panther Caruso's signature heavy interceptor. Trades agility for maximum armor.",
+            appearances: "Appearance: StarFox Command",
         },
-
-         "stalker": 
-        {
-        name: "Stalker",
-        desc: "An experimental stealth interceptor. Equipped with a quad-cannon array, it is designed to deliver overwhelming firepower from a concealed position. It is the silent predator of the Star Wolf fleet.",
-        appearances: "Appearance: StarFox Event Horizon",
+        "stalker": {
+            name: "Stalker",
+            desc: "An experimental stealth interceptor. Designed to deliver overwhelming firepower from a concealed position.",
+            appearances: "Appearance: StarFox Event Horizon",
         },
-
-         "battleship": 
-        {
-        name: "Cornerian Battleship",
-        desc": "The primary capital ship of the CDF fleet. Known for its massive profile and heavy side-mounted engine pods, the Invicta-class provides the heavy firepower needed to protect the Lylat System's core worlds.",
-        appearances: "Appearance: StarFox 64, 64 3D, Zero",
+        "battleship": {
+            name: "Cornerian Battleship",
+            desc: "The primary capital ship of the CDF fleet. Known for its massive profile and heavy engine pods.",
+            appearances: "Appearance: StarFox 64, 64 3D, Zero",
         },
-
-           "battleship_x02": 
-        {
-        name: "Cornerian Battleship X-02",
-        desc: "An experimental assault vessel built for speed and precision. The X-02 Prototype utilizes a high-output G-Diffuser system to achieve superior mobility, making it the fastest capital ship in the Cornerian Defense Force's arsenal.",
-        appearances: "Appearance: StarFox 2",
+        "battleship_x02": {
+            name: "Cornerian Battleship X-02",
+            desc: "An experimental assault vessel built for speed and precision using a high-output G-Diffuser.",
+            appearances: "Appearance: StarFox 2",
         },
-
-           "beam_tank": 
-        {
-        name: "Cornerian Beam Tank",
-        desc: "A heavy ground-based artillery unit. The Beam Tank is equipped with a high-output particle cannon designed to neutralize heavy fortifications and enemy armor from long range.",
-        appearances: "Appearance: StarFox Event Horizon",
+        "beam_tank": {
+            name: "Cornerian Beam Tank",
+            desc: "A heavy ground-based artillery unit equipped with a high-output particle cannon.",
+            appearances: "Appearance: StarFox Event Horizon",
         },
-
-           "bill_fighter": 
-        {
-        name: "Cornerian Fighter",
-        desc: "The primary interceptor of the CDF, frequently seen defending Cornerian airspace. Featuring enhanced thrusters and a customized weapon cooling system, famously utilized by Bill Grey's Bulldog Squadron.",
-        appearances: "Appearance: StarFox 64, 64 3D, Zero",
+        "bill_fighter": {
+            name: "Cornerian Fighter",
+            desc: "The primary interceptor of the CDF. Famously utilized by Bill Grey's Bulldog Squadron.",
+            appearances: "Appearance: StarFox 64, 64 3D, Zero",
         },
-
-           "cap_build": 
-        {
-        name: "Cornerian Capital Building",
-        desc: "A vital strategic landmark and command hub. Providing planetary surveillance and coordinating CDF units during combat. Its upper landing pad is designed for rapid VIP extraction and tactical deployments.",
-        appearances: "Appearance: StarFox Zero",
+        "cap_build": {
+            name: "Cornerian Capital Building",
+            desc: "A vital strategic landmark and command hub providing planetary surveillance.",
+            appearances: "Appearance: StarFox Zero",
         },
-
-           "cruiser": 
-        {
-        name: "Cornerian Cruiser",
-        desc: "The backbone of the CDF fleet. The Gallant-class Cruiser is a versatile multi-purpose vessel capable of long-range patrols and ship-to-ship combat.",
-        appearances: "Appearance: StarFox 64, 64 3D, Zero",
+        "cruiser": {
+            name: "Cornerian Cruiser",
+            desc: "The backbone of the CDF fleet. A versatile multi-purpose vessel.",
+            appearances: "Appearance: StarFox 64, 64 3D, Zero",
         },
-
-           "cruiser_x02": 
-        {
-        name: "Cornerian Cruiser X-02",
-        desc: "A next-generation strike vessel built on the X-Series chassis. The Valiant-class features a radical increase in maneuverability and point-defense capabilities.",
-        appearances: "Appearance: StarFox 2",
+        "cruiser_x02": {
+            name: "Cornerian Cruiser X-02",
+            desc: "A next-generation strike vessel built on the X-Series chassis.",
+            appearances: "Appearance: StarFox 2",
         },
-
-           "freighter": 
-        {
-        name: "Cornerian Freighter",
-        desc: "The backbone of Lylat's interstellar trade and military supply. Built for volume over speed, featuring a rugged hull capable of weathering ion storms.",
-        appearances: "Appearance: StarFox Event Horizon",
+        "freighter": {
+            name: "Cornerian Freighter",
+            desc: "The backbone of Lylat's interstellar trade. Built for volume over speed.",
+            appearances: "Appearance: StarFox Event Horizon",
         },
-
-           "frigate": 
-        {
-        name: "Cornerian Frigate",
-        desc: "A dedicated escort vessel equipped with advanced tracking systems. Specializing in fleet defense, utilizing a network of automated turrets to create a 'no-fly zone' for enemy interceptors.",
-        appearances: "Appearance: StarFox 64, 64 3D, Zero",
+        "frigate": {
+            name: "Cornerian Frigate",
+            desc: "A dedicated escort vessel equipped with advanced tracking systems.",
+            appearances: "Appearance: StarFox 64, 64 3D, Zero",
         },
-
-           "navy_battleship": 
-        {
-        name: "Cornerian Navy Battleship",
-        desc: "The Triton-class Dreadnought is the largest surface vessel in the Cornerian Navy. It acts as a mobile fortress and aircraft carrier, providing a vital strategic presence in Corneria's vast oceanic regions.",
-        appearances: "Appearance: StarFox Event Horizon",
+        "navy_battleship": {
+            name: "Cornerian Navy Battleship",
+            desc: "The Triton-class Dreadnought is the largest surface vessel in the Cornerian Navy.",
+            appearances: "Appearance: StarFox Event Horizon",
         },
-
-           "navy_corvette": 
-        {
-        name: "Cornerian Navy Corvette",
-        desc: "The Marlin-class is a high-speed interceptor used for coastal defense. Allowing it to provide covering fire for ground troops while maintaining high maneuverability in shallow waters.",
-        appearances: "Appearance: StarFox Event Horizon",
+        "navy_corvette": {
+            name: "Cornerian Navy Corvette",
+            desc: "The Marlin-class is a high-speed interceptor used for coastal defense.",
+            appearances: "Appearance: StarFox Event Horizon",
         },
-
-           "navy_cruiser": 
-        {
-        name: "Cornerian Navy Cruiser",
-        desc: "The Sea Wraith-class serves as the fleet's primary scout vessel. Equipped with an advanced sensor mast and a drone-ready helipad.",
-        appearances: "Appearance: StarFox Event Horizon",
+        "navy_cruiser": {
+            name: "Cornerian Navy Cruiser",
+            desc: "The Sea Wraith-class serves as the fleet's primary scout vessel.",
+            appearances: "Appearance: StarFox Event Horizon",
         },
-
-           "transport": 
-        {
-        name: "Cornerian Transport",
-        desc": "A tactical personnel carrier built for atmospheric re-entry and rapid troop deployment. The Pleiades-class is often used to ferry the teams to orbital stations and planetary surfaces under heavy fire.",
-        appearances: "Appearance: StarFox Zero",
+        "transport": {
+            name: "Cornerian Transport",
+            desc: "A tactical personnel carrier built for atmospheric re-entry and rapid deployment.",
+            appearances: "Appearance: StarFox Zero",
         },
-        
-           "troopship_x02": 
-        {
-        name: "Cornerian Troopship",
-        desc: "The Vanguard-class is a high-durability assault lander. Designed to survive 'Hot-Drops' in high-threat environments, it carries experimental stealth-plating and a reinforced frame to deliver CDF ground forces directly into the fray.",
-        appearances: "Appearance: StarFox 2",
-        }, 
+        "troopship_x02": {
+            name: "Cornerian Troopship",
+            desc: "The Vanguard-class is a high-durability assault lander with experimental stealth-plating.",
+            appearances: "Appearance: StarFox 2",
+        },
     };
 
-  if (team && ship && shipIntel[ship]) {
-        // This combines them: "starfox/arwing_mk1.glb"
+    if (team && ship && shipIntel[ship]) {
+        // Set the model source
         document.getElementById('viewer').src = `${team}/${ship}.glb`;
         
+        // Update the text
         document.getElementById('title').innerText = shipIntel[ship].name;
         document.getElementById('desc').innerText = shipIntel[ship].desc;
-        document.getElementById('stats').innerText = shipIntel[ship].stats;
+        document.getElementById('appearances').innerText = shipIntel[ship].appearances;
+    } else {
+        document.getElementById('title').innerText = "Unit Not Found";
+        document.getElementById('desc').innerText = "Please select a valid ship from the database.";
     }
 </script>
 
