@@ -19,10 +19,17 @@
 
  <div class="lore-panel">
     <a href="index.html" class="back">← EXIT DATABASE</a>
-    <h1 id="title">Loading...</h1>
-    <p id="desc"></p>
-    <div class="stats" id="stats"></div>
-    <p class="appearances"><strong>Appearances:</strong> <span id="appearances"></span></p>
+    <h1 id="title">Select a Ship</h1>
+    <p id="desc">Accessing Cornerian Fleet Records...</p>
+    
+    <div class="appearances-box">
+        <span class="label">RECORDED APPEARANCES</span>
+        <p id="appearances">N/A</p>
+    </div>
+</div>
+
+<div id="container3d">
+    <model-viewer id="ship-viewer" src="" auto-rotate camera-controls></model-viewer>
 </div>
 
 <script>
@@ -272,16 +279,41 @@
         }, 
     };
 
-    function showDetails(shipKey) 
+   function showDetails(shipKey) 
+   {
+    const ship = shipIntel[shipKey];
+    
+    if (ship) 
     {
-        const ship = shipIntel[shipKey];
-        if (ship) 
+        // 1. Update the Text
+        document.getElementById('title').innerText = ship.name;
+        document.getElementById('desc').innerText = ship.desc;
+        document.getElementById('appearances').innerText = ship.appearances;
+
+        // 2. Update the Model
+        // Change 'ship-viewer' to the ID of your 3D container or model-viewer tag
+        const viewer = document.getElementById('ship-viewer');
+        
+        if (viewer) 
         {
-            document.getElementById('title').innerText = ship.name;
-            document.getElementById('desc').innerText = ship.desc;
-            document.getElementById('appearances').innerText = ship.appearances;
+            // If you're using <model-viewer>
+            viewer.src = ship.modelPath;
+            
+            // If you're using a custom Three.js function like 'loadModel'
+            // loadModel(ship.modelPath);
         }
     }
+}
+
+    window.onload = function() 
+    {
+    const urlParams = new URLSearchParams(window.location.search);
+    const shipKey = urlParams.get('ship');
+    if (shipKey) 
+    {
+        showDetails(shipKey);
+    }
+};
 </script>
 
 </body>
